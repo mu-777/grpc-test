@@ -1,0 +1,92 @@
+
+FROM ubuntu:18.04
+
+# https://sleepless-se.net/2018/07/31/docker-build-tzdata-ubuntu/
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y \
+        tzdata \
+  && apt-get clean
+ENV TZ=Asia/Tokyo
+
+RUN apt-get update && apt-get install -y \
+      ssh \
+      build-essential \
+      autoconf \
+      libtool \
+      pkg-config \
+      libssl-dev \
+      cmake \
+      git \
+  && apt-get clean
+
+
+RUN git clone https://github.com/grpc/grpc \
+    && cd grpc \
+    && git submodule update --init
+
+# https://github.com/grpc/grpc/blob/master/test/distrib/cpp/run_distrib_test_cmake.sh
+RUN cd grpc/third_party \
+#
+    && mkdir -p abseil-cpp/build \
+    && cd abseil-cpp/build \
+    && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
+    && make -j8 install \
+    && cd - \
+#
+    && mkdir -p cares/cares/build \
+    && cd cares/cares/build \
+    && cmake .. -DCMAKE_BUILD_TYPE=Release \
+    && make -j8 install \
+    && cd - \
+#
+    && mkdir -p protobuf/cmake/build \
+    && cd protobuf/cmake/build \
+    && cmake .. -Dprotobuf_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release \
+    && make -j8 install \
+    && cd - \
+#
+    && mkdir -p re2/build \
+    && cd re2/build \
+    && cmake ..  -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
+    && make -j8 install \
+    && cd - \
+#
+    && mkdir -p zlib/build \
+    && cd zlib/build \
+    && cmake ..  -DCMAKE_BUILD_TYPE=Release \
+    && make -j8 install \
+    && cd -
+
+
+RUN cd grpc \
+    && mkdir build \
+    && cd build \
+    && cmake .. -DgRPC_INSTALL=ON \
+             -DCMAKE_BUILD_TYPE=Release \
+             -DgRPC_BUILD_TESTS=OFF \
+             -DgRPC_ABSL_PROVIDER=package \
+             -DgRPC_CARES_PROVIDER=package \
+             -DgRPC_PROTOBUF_PROVIDER=package \
+             -DgRPC_RE2_PROVIDER=package \
+             -DgRPC_SSL_PROVIDER=package \
+             -DgRPC_ZLIB_PROVIDER=package \
+    && make -j8 \
+    && make install
+
+RUN cd grpc/examples/cpp/helloworld \
+    && mkdir build \
+    && cd build \
+    && cmake .. \
+    && make -j8
+
+
+
+
+
+
+
+
+
+
+
+
