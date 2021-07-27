@@ -9,19 +9,64 @@
           </mappings>
         </serverdata>
       </paths>
+      <paths name="DockerHost (178a0a9a-6190-4647-98b0-b6ffedc5e826)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="grpc-test" local="$PROJECT_DIR$" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-dockerhost" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
       <paths name="DockerHost (be4ff1ad-511f-480a-8e4e-caf4cda762cd)">
         <serverdata>
           <mappings>
             <mapping deploy="grpc-test" local="$PROJECT_DIR$" web="/" />
           </mappings>
           <excludedPaths>
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-dockerhost" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
             <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-dockerhost" />
             <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-wsl1804" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-dockerhost" />
           </excludedPaths>
         </serverdata>
       </paths>
+      <paths name="DockerHost (d5d98e8e-544d-40cd-8421-7ce02ad5d82b)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/tmp.iw3A0wbqgU" local="$PROJECT_DIR$" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-dockerhost" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+      <paths name="TestDockerHost (53dcc4e6-2e3c-4c7e-aeaa-1cd02590120c)">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="WSL1804 (206affc6-db26-4aba-8a23-857743b6d5cd)">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="WSL1804 (75fab712-78c2-45e1-8900-1763328a7d70)">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="WSL1804 (a16f8a31-e788-4169-a4a3-0ddd20879575)">
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />
