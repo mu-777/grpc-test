@@ -38,13 +38,13 @@ add_custom_command(
 # protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTOFILE})
 
 
-add_library(GRPC_PROTO ${PROTO_SRCS} ${PROTO_HDRS} ${GRPC_SRCS} ${GRPC_HDRS})
-target_link_libraries(GRPC_PROTO ${_REFLECTION} ${_GRPC_GRPCPP} ${_PROTOBUF_LIBPROTOBUF})
+add_library(grpc_proto ${PROTO_SRCS} ${PROTO_HDRS} ${GRPC_SRCS} ${GRPC_HDRS})
+target_link_libraries(grpc_proto ${_REFLECTION} ${_GRPC_GRPCPP} ${_PROTOBUF_LIBPROTOBUF})
 
 foreach (_target grpc_server grpc_client)
     add_executable(${_target} "${_target}.cpp")
     target_link_libraries(${_target}
-            GRPC_PROTO
+            grpc_proto
             ${_REFLECTION}
             ${_GRPC_GRPCPP}
             ${_PROTOBUF_LIBPROTOBUF})
