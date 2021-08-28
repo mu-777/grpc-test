@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y \
   && apt-get clean
 
 
-RUN git clone https://github.com/grpc/grpc \
+RUN git clone https://github.com/grpc/grpc -b v1.39.0 \
     && cd grpc \
     && git submodule update --init
 
