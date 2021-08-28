@@ -48,5 +48,6 @@ foreach (_target grpc_server grpc_client)
             ${_REFLECTION}
             ${_GRPC_GRPCPP}
             ${_PROTOBUF_LIBPROTOBUF})
-    install(TARGETS ${_target} DESTINATION ${CMAKE_CACHEFILE_DIR}/install)
+    install(TARGETS ${_target}
+            RUNTIME DESTINATION bin)
 endforeach ()
