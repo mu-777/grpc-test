@@ -2,7 +2,6 @@
 
 #include <grpcpp/ext/proto_server_reflection_plugin.h>
 #include <grpcpp/grpcpp.h>
-#include <grpcpp/health_check_service_interface.h>
 
 #include "simple.pb.h"
 #include "simple.grpc.pb.h"
