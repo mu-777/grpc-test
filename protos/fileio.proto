@@ -3,14 +3,27 @@ syntax = "proto3";
 package fileio;
 
 service FileIO {
-  rpc RequestSqlite (SqliteRequest) returns (SqliteResponse) {}
+  rpc RequestSqlite (SqliteRequest) returns (stream SqliteResponse) {}
 }
 
 message SqliteRequest {
   string filepath = 1;
 }
 
-message SqliteResponse {
+// https://christina04.hatenablog.com/entry/handle-large-data-via-grpc
+message SqliteMeta {
+  uint32 status = 1;
+  uint32 size = 2;
+}
+
+message SqliteChunk {
   uint32 status = 1;   // 0 is success
-  bytes sqlite = 2;
+  bytes data = 2;
+}
+
+message SqliteResponse {
+  oneof value {
+    SqliteMeta meta = 1;
+    SqliteChunk chunk = 2;
+  }
 }

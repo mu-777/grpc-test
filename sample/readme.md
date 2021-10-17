@@ -1,0 +1,2 @@
+- chinook.db is from https://www.sqlitetutorial.net/sqlite-sample-database/
+- zenkoku.sqlite3 is from http://jusyo.jp/index.html

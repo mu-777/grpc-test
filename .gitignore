@@ -33,6 +33,7 @@
 
 .*
 !.gitignore
+!.gitattributes
 !.idea
 
 cmake-build*

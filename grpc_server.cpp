@@ -9,6 +9,9 @@
 #include "fileio.pb.h"
 #include "fileio.grpc.pb.h"
 
+#include <thread>
+#include <chrono>
+
 namespace simple {
 class SimpleAddImpl final : public Add::Service {
   ::grpc::Status Add(::grpc::ServerContext *context, const AddRequest *req,
@@ -22,20 +25,76 @@ class SimpleAddImpl final : public Add::Service {
 
 namespace fileio {
 class SqliteFileIOImpl final : public FileIO::Service {
-  ::grpc::Status RequestSqlite(::grpc::ServerContext *context, const SqliteRequest *req,
-                               SqliteResponse *res) override {
+
+  const int ReadBufferSize = 1048576;
+
+  ::grpc::Status RequestSqlite(::grpc::ServerContext *context,
+                               const SqliteRequest *req,
+                               grpc::ServerWriter<SqliteResponse> *writer) override {
     std::cout << "[Server] ReceivedReq: " << req->filepath() << std::endl;
 
-    std::string sqlite;
-    if (readFile(sqlite, req->filepath())) {
-      res->set_status(0);
-      res->set_sqlite(sqlite);
-    } else {
-      std::cout << "[Server] Not found: " << req->filepath() << std::endl;
-      res->set_status(1);
-      res->set_allocated_sqlite(nullptr);
+    std::ifstream ifs(req->filepath(), std::ios::in | std::ios::binary);
+    if (!ifs.is_open()) {
+      sendMetaRes(writer, 1, 0);
+      return ::grpc::Status::CANCELLED;
     }
+    ifs.seekg(0, std::ios::end);
+    sendMetaRes(writer, 0, ifs.tellg());
+
+    ifs.seekg(0, std::ios::beg);
+    char *buf = new char[ReadBufferSize];
+    while (!ifs.eof()) {
+      ifs.read(buf, ReadBufferSize);
+      sendChunkRes(writer, 1, new std::string(buf, ifs.gcount()));
+    }
+    delete buf;
+
+
+//    for (auto i = 0; i < 5; i++) {
+//      auto res = SqliteResponse();
+//      if (i == 0) {
+//        auto meta = new SqliteMeta();
+//        meta->set_status(0);
+//        meta->set_size(1000);
+//        res.set_allocated_meta(meta);
+//      } else {
+//        auto chunk = new SqliteChunk();
+//        chunk->set_status(0);
+//        chunk->set_allocated_data(nullptr);
+//        res.set_allocated_chunk(chunk);
+//      }
+//      writer->Write(res);
+//      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+//    }
+
+//    std::string sqlite;
+//    if (readFile(sqlite, req->filepath())) {
+//      res->set_status(0);
+//      res->set_sqlite(sqlite);
+//    } else {
+//      std::cout << "[Server] Not found: " << req->filepath() << std::endl;
+//      res->set_status(1);
+//      res->set_allocated_sqlite(nullptr);
+//    }
     return ::grpc::Status::OK;
+  }
+
+  static void sendMetaRes(grpc::ServerWriter<SqliteResponse> *writer, uint32_t status, uint32_t size) {
+    auto res = SqliteResponse();
+    auto meta = new SqliteMeta();
+    meta->set_status(status);
+    meta->set_size(size);
+    res.set_allocated_meta(meta);
+    writer->Write(res);
+  }
+
+  static void sendChunkRes(grpc::ServerWriter<SqliteResponse> *writer, uint32_t status, std::string *data) {
+    auto res = SqliteResponse();
+    auto chunk = new SqliteChunk();
+    chunk->set_status(status);
+    chunk->set_allocated_data(data);
+    res.set_allocated_chunk(chunk);
+    writer->Write(res);
   }
 
   // https://github.com/steplee/lidarRender/blob/fc61c094c2dd173cb3f9d0938516215620ccec55/tdt/tdt/io.hpp
@@ -62,18 +121,14 @@ void RunServer() {
   grpc::EnableDefaultHealthCheckService(true);
   grpc::reflection::InitProtoReflectionServerBuilderPlugin();
   grpc::ServerBuilder builder;
-  // Listen on the given address without any authentication mechanism.
+
   builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
-  // Register "service_simple" as the instance through which we'll communicate with
-  // clients. In this case it corresponds to an *synchronous* service_simple.
+
   builder.RegisterService(&service_simple);
   builder.RegisterService(&service_fileio);
-  // Finally assemble the server.
+
   std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
   std::cout << "Server listening on " << server_address << std::endl;
-
-  // Wait for the server to shutdown. Note that some other thread must be
-  // responsible for shutting down the server for this call to ever return.
   server->Wait();
 }
 
