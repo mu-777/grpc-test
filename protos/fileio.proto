@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package fileio;
+
+service FileIO {
+  rpc RequestSqlite (SqliteRequest) returns (SqliteResponse) {}
+}
+
+message SqliteRequest {
+  string req = 1;
+}
+
+message SqliteResponse {
+  bytes sqlite_bin = 1;
+}

@@ -5,6 +5,8 @@
 
 #include "simple.pb.h"
 #include "simple.grpc.pb.h"
+#include "fileio.pb.h"
+#include "fileio.grpc.pb.h"
 
 namespace simple {
 class SimpleAddImpl final : public Add::Service {
@@ -12,6 +14,18 @@ class SimpleAddImpl final : public Add::Service {
                      AddReply *res) override {
     std::cout << "[Server] ReceivedReq: " << req->str1() << ", " << req->str2() << std::endl;
     res->set_str(req->str1() + req->str2());
+    return ::grpc::Status::OK;
+  }
+};
+};
+
+namespace fileio {
+class SqliteFileIOImpl final : public FileIO::Service {
+  ::grpc::Status RequestSqlite(::grpc::ServerContext *context, const SqliteRequest *req,
+                               SqliteResponse *res) override {
+    std::cout << "[Server] ReceivedReq: " << req->req() << std::endl;
+
+
     return ::grpc::Status::OK;
   }
 };
