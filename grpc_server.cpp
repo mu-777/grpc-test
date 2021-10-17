@@ -9,9 +9,6 @@
 #include "fileio.pb.h"
 #include "fileio.grpc.pb.h"
 
-#include <thread>
-#include <chrono>
-
 namespace simple {
 class SimpleAddImpl final : public Add::Service {
   ::grpc::Status Add(::grpc::ServerContext *context, const AddRequest *req,
@@ -49,33 +46,6 @@ class SqliteFileIOImpl final : public FileIO::Service {
     }
     delete buf;
 
-
-//    for (auto i = 0; i < 5; i++) {
-//      auto res = SqliteResponse();
-//      if (i == 0) {
-//        auto meta = new SqliteMeta();
-//        meta->set_status(0);
-//        meta->set_size(1000);
-//        res.set_allocated_meta(meta);
-//      } else {
-//        auto chunk = new SqliteChunk();
-//        chunk->set_status(0);
-//        chunk->set_allocated_data(nullptr);
-//        res.set_allocated_chunk(chunk);
-//      }
-//      writer->Write(res);
-//      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-//    }
-
-//    std::string sqlite;
-//    if (readFile(sqlite, req->filepath())) {
-//      res->set_status(0);
-//      res->set_sqlite(sqlite);
-//    } else {
-//      std::cout << "[Server] Not found: " << req->filepath() << std::endl;
-//      res->set_status(1);
-//      res->set_allocated_sqlite(nullptr);
-//    }
     return ::grpc::Status::OK;
   }
 

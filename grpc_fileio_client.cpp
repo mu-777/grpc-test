@@ -48,18 +48,6 @@ int main(int argc, char **argv) {
   }
   of.write(sqlite.c_str(), sqlite.size());
 
-
-//  std::cout << "[Client] ReceivedRes: " << res.status() << std::endl;
-//  if (res.status() != 0) {
-//    std::cout << "Fail to get file from server: " << res.status() << std::endl;
-//    return 1;
-//  }
-//  std::ofstream of("received.sqlite", std::ios::out | std::ios::binary | std::ios::trunc);
-//  if (!of) {
-//    std::cout << "Fail to open file to write" << std::endl;
-//    return 1;
-//  }
-//  of.write(res.sqlite().c_str(), res.sqlite().size());
   return 0;
 }
 
