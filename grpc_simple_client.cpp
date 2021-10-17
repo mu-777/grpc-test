@@ -5,7 +5,7 @@
 #include "simple.grpc.pb.h"
 
 int main(int argc, char **argv) {
-  std::cout << "Hello, World! client" << std::endl;
+  std::cout << "Hello, World! I'm simple client" << std::endl;
   if (argc < 2){
     std::cout << "Must input 2 args" << std::endl;
     return 0;

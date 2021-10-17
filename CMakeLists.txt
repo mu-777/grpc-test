@@ -47,7 +47,7 @@ endforeach ()
 add_library(grpc_proto ${PROTO_SRCS} ${PROTO_HDRS} ${GRPC_SRCS} ${GRPC_HDRS})
 target_link_libraries(grpc_proto ${_REFLECTION} ${_GRPC_GRPCPP} ${_PROTOBUF_LIBPROTOBUF})
 
-foreach (_target grpc_server grpc_client)
+foreach (_target grpc_server grpc_simple_client grpc_fileio_client)
     add_executable(${_target} "${_target}.cpp")
     target_link_libraries(${_target}
             grpc_proto

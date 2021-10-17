@@ -7,9 +7,10 @@ service FileIO {
 }
 
 message SqliteRequest {
-  string req = 1;
+  string filepath = 1;
 }
 
 message SqliteResponse {
-  bytes sqlite_bin = 1;
+  uint32 status = 1;   // 0 is success
+  bytes sqlite = 2;
 }
