@@ -9,6 +9,9 @@
 #include "fileio.pb.h"
 #include "fileio.grpc.pb.h"
 
+#include <thread>
+#include <chrono>
+
 namespace simple {
 class SimpleAddImpl final : public Add::Service {
   ::grpc::Status Add(::grpc::ServerContext *context, const AddRequest *req,
@@ -35,6 +38,11 @@ class SqliteFileIOImpl final : public FileIO::Service {
       sendMetaRes(writer, 1, 0);
       return ::grpc::Status::CANCELLED;
     }
+    for (auto i = 0; i < 10; i++) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+      auto m = i % 3;
+      std::cout << "loading" << ((m == 0) ? "." : ((m == 1) ? ".." : "...")) << std::endl;
+    }
     ifs.seekg(0, std::ios::end);
     sendMetaRes(writer, 0, ifs.tellg());
 
@@ -42,6 +50,7 @@ class SqliteFileIOImpl final : public FileIO::Service {
     char *buf = new char[ReadBufferSize];
     while (!ifs.eof()) {
       ifs.read(buf, ReadBufferSize);
+      std::cout << "send data chunk" << std::endl;
       sendChunkRes(writer, 1, new std::string(buf, ifs.gcount()));
     }
     delete buf;

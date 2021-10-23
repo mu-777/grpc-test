@@ -5,6 +5,9 @@
 #include "fileio.pb.h"
 #include "fileio.grpc.pb.h"
 
+#include <thread>
+#include <chrono>
+
 int main(int argc, char **argv) {
   std::cout << "Hello, World! I'm  fileio client" << std::endl;
   if (argc < 1) {
@@ -33,6 +36,7 @@ int main(int argc, char **argv) {
       std::cout << "Received chunk: " << res.chunk().data().size() << std::endl;
       sqlite += res.chunk().data();
       std::cout << "Current data: " << sqlite.size() << std::endl;
+      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
   }
   auto status = reader->Finish();
