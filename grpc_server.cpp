@@ -1,14 +1,10 @@
 #include <iostream>
-#include <fstream>
 
 #include <grpcpp/ext/proto_server_reflection_plugin.h>
 #include <grpcpp/grpcpp.h>
 
 #include "simple.pb.h"
 #include "simple.grpc.pb.h"
-
-#include <thread>
-#include <chrono>
 
 namespace simple {
 class SimpleAddImpl final : public Add::Service {
