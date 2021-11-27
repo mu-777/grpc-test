@@ -1,92 +1,29 @@
 
 FROM ubuntu:18.04
 
-# https://sleepless-se.net/2018/07/31/docker-build-tzdata-ubuntu/
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y \
-        tzdata \
-  && apt-get clean
-ENV TZ=Asia/Tokyo
+# https://grpc.io/docs/languages/cpp/quickstart/
 
-RUN apt-get update && apt-get install -y \
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update
+RUN apt-get install -y \
       ssh \
       build-essential \
       autoconf \
       libtool \
       pkg-config \
       libssl-dev \
-      cmake \
       git \
-  && apt-get clean
+    && apt-get clean
 
+RUN wget -q -O cmake-linux.sh https://github.com/Kitware/CMake/releases/download/v3.19.6/cmake-3.19.6-Linux-x86_64.sh \
+    && sh cmake-linux.sh -- --skip-license \
+    && rm cmake-linux.sh
 
-RUN git clone https://github.com/grpc/grpc -b v1.39.0 \
+RUN git clone https://github.com/grpc/grpc -b v1.41.0 --recursive \
     && cd grpc \
-    && git submodule update --init
-
-# https://github.com/grpc/grpc/blob/master/test/distrib/cpp/run_distrib_test_cmake.sh
-RUN cd grpc/third_party \
-#
-    && mkdir -p abseil-cpp/build \
-    && cd abseil-cpp/build \
-    && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
-    && make -j8 install \
-    && cd - \
-#
-    && mkdir -p cares/cares/build \
-    && cd cares/cares/build \
-    && cmake .. -DCMAKE_BUILD_TYPE=Release \
-    && make -j8 install \
-    && cd - \
-#
-    && mkdir -p protobuf/cmake/build \
-    && cd protobuf/cmake/build \
-    && cmake .. -Dprotobuf_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release \
-    && make -j8 install \
-    && cd - \
-#
-    && mkdir -p re2/build \
-    && cd re2/build \
-    && cmake ..  -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
-    && make -j8 install \
-    && cd - \
-#
-    && mkdir -p zlib/build \
-    && cd zlib/build \
-    && cmake ..  -DCMAKE_BUILD_TYPE=Release \
-    && make -j8 install \
-    && cd -
-
-
-RUN cd grpc \
     && mkdir build \
     && cd build \
-    && cmake .. -DgRPC_INSTALL=ON \
-             -DCMAKE_BUILD_TYPE=Release \
-             -DgRPC_BUILD_TESTS=OFF \
-             -DgRPC_ABSL_PROVIDER=package \
-             -DgRPC_CARES_PROVIDER=package \
-             -DgRPC_PROTOBUF_PROVIDER=package \
-             -DgRPC_RE2_PROVIDER=package \
-             -DgRPC_SSL_PROVIDER=package \
-             -DgRPC_ZLIB_PROVIDER=package \
+    && cmake .. -DgRPC_INSTALL=ON -DgRPC_BUILD_TESTS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
     && make -j8 \
     && make install
-
-RUN cd grpc/examples/cpp/helloworld \
-    && mkdir build \
-    && cd build \
-    && cmake .. \
-    && make -j8
-
-
-
-
-
-
-
-
-
-
-
 
