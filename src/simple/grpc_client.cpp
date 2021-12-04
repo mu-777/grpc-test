@@ -6,7 +6,7 @@
 
 int main(int argc, char **argv) {
   std::cout << "Hello, World! I'm simple client" << std::endl;
-  if (argc < 2){
+  if (argc < 2) {
     std::cout << "Must input 2 args" << std::endl;
     return 0;
   }
@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
   auto status = stub->Add(&ctx, req, &res);
   if (!status.ok()) {
     std::cout << status.error_code() << ": " << status.error_message() << std::endl;
-    std::cout <<  "RPC failed" << std::endl;
+    std::cout << "RPC failed" << std::endl;
     return 0;
   }
   std::cout << "[Client] ReceivedRes: " << res.str() << std::endl;
