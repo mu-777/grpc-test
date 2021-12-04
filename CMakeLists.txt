@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(grpc_refrection_test)
+project(grpc_test)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -14,4 +14,4 @@ set(_PROTOBUF_LIBPROTOBUF protobuf::libprotobuf)
 set(_GRPC_GRPCPP gRPC::grpc++)
 set(_REFLECTION gRPC::grpc++_reflection)
 
-add_subdirectory(src/simple)
+add_subdirectory(src)
