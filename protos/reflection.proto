@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package reflection;
+
+service Area {
+  rpc CalcArea (ShapeData) returns (AreaData) {}
+}
+
+message ShapeData {
+  oneof shape {
+    Triangle triangle = 1;
+    Rectangle rectangle = 2;
+    Square square = 3;
+    Circle circle = 4;
+  }
+}
+
+message AreaData {
+  float area = 1;
+}
+
+message Triangle {
+  float baseSide = 1;
+  float height = 2;
+}
+
+message Rectangle {
+  float side1 = 1;
+  float side2 = 2;
+}
+
+message Square {
+  float side = 1;
+}
+
+message Circle {
+  float radius = 1;
+}
