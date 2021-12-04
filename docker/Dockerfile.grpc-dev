@@ -22,7 +22,6 @@ RUN apt-get update \
       g++ \
       gdb \
       clang \
-      cmake \
       rsync \
       tar \
       python \
