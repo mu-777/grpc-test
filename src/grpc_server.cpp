@@ -2,20 +2,8 @@
 
 #include <grpcpp/ext/proto_server_reflection_plugin.h>
 #include <grpcpp/grpcpp.h>
+#include "simple/simple_server.h"
 
-#include "simple.pb.h"
-#include "simple.grpc.pb.h"
-
-namespace simple {
-class SimpleAddImpl final : public Add::Service {
-  ::grpc::Status Add(::grpc::ServerContext *context, const AddRequest *req,
-                     AddReply *res) override {
-    std::cout << "[Server] ReceivedReq: " << req->str1() << ", " << req->str2() << std::endl;
-    res->set_str(req->str1() + req->str2());
-    return ::grpc::Status::OK;
-  }
-};
-};
 
 void RunServer() {
   std::string server_address("localhost:50051");
